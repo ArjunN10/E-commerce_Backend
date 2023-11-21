@@ -1,0 +1,18 @@
+const mongoose=require("mongoose")
+const admin=require("../models/AdminSchema")
+const users=require("../models/UserSchema")
+
+
+mongoose.connect("mongodb://0.0.0.0:27017/user-management",{
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    });
+
+
+
+module.exports={
+
+
+
+
+    }
