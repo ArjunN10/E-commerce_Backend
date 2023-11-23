@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const port = 6000;
 const adminrout = require("./routes/AdminRoute");
-// const usersrout = require("./routes/UserRoute");
+const usersrout = require("./routes/UserRoute")
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -20,7 +20,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/admin",adminrout);
-// app.use("/api/users", usersrout);
+app.use("/api/users", usersrout);
 
 // Additional application logic goes here...
 

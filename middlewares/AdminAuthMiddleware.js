@@ -1,9 +1,9 @@
 const jwt=require("jsonwebtoken")
 
 module.exports = function verifyToken(req, res , next) {
-    const Btoken = req.headers["authorization"]
+    const Btoken = req.headers[ "Authorization"]
     const token = Btoken.split(' ')[1];
-    console.log(token)
+    // console.log(token)
     
     if(!token) {
         return res.status(403).json({erro:"NO token provided"})

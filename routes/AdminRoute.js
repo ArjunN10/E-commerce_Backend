@@ -1,6 +1,6 @@
 const express=require("express")
 const router=express.Router()
-const admin=require("../controllers/Admincontroller")
+const admincontroller=require("../controllers/Admincontroller")
 
 
 
@@ -11,7 +11,7 @@ const TrycatchMiddleware = require("../middlewares/TryCatchMiddleware")
 
 // router.use(express.json())
 
-router.post("/login", TrycatchMiddleware(admin.login));
+router.post("/login", TrycatchMiddleware(admincontroller.login));
 // router.use(verifyToken)
 
 
