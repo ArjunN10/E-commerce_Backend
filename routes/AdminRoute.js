@@ -6,13 +6,27 @@ const admincontroller=require("../controllers/Admincontroller")
 
 //middleware
 const TrycatchMiddleware = require("../middlewares/TryCatchMiddleware")
-// const verifyToken=require("../middlewares/AdminAuthMiddleware")
+const verifyToken=require("../middlewares/AdminAuthMiddleware")
+const imageUpload=require("../middlewares/imageuploader/ImageUploader")
 
 
 // router.use(express.json())
 
-router.post("/login", TrycatchMiddleware(admincontroller.login));
-// router.use(verifyToken)
+router
+.post("/login", TrycatchMiddleware(admincontroller.login))
+
+// apk middleware start
+
+.use(verifyToken)
+
+// apk middleware end
+
+.get("/users",TrycatchMiddleware(admincontroller.allusers))
+.get("/users/:id",TrycatchMiddleware(admincontroller.UseById))
+.post("/product",imageUpload,TrycatchMiddleware(admincontroller.addproduct))
+.get("/products",TrycatchMiddleware(admincontroller.allproducts))
+.get("/product/:id",TrycatchMiddleware(admincontroller.productById))
+
 
 
 

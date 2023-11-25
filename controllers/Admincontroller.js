@@ -1,6 +1,9 @@
 
 // const users=require("../models/UserSchema")
 const jwt=require("jsonwebtoken")
+const userDatabase=require("../models/UserSchema")
+const {joiProductSchema}=require("../models/ValidationSchema")
+const products=require("../models/ProductSchema")
 
 
 
@@ -34,12 +37,124 @@ module.exports={
       },
 
 
+//List all users
+
+allusers:async(req,res)=>{
+    
+    const allusers=await userDatabase.find()
+// console.log(allusers);
+    if(allusers.length === 0){
+        res.status(404).json({
+            status:"error",
+            message:"No Userdata Found"
+        })
+    }else{
+
+        res.status(200).json({
+            status:"success",
+            message:"Successfully fetched Users Data",
+            data:allusers
+        })
+    }
+},
+
+//View specific user data
+
+
+UseById:async(req,res)=>{
+    const userId=req.params.id
+    const user=await userDatabase.findById(userId)
+
+    if(!user){
+        res.status(404).json({
+            status:"error",
+            message:"User Not Found"
+        })
+    }
+    res.status(200).json({
+        status:"success",
+        message:"User successfully Found",
+        data:{user}
+    })
+},
+
+
+//Add/Create a  products
+
+addproduct:async(req,res)=>{
+    console.log("hhhhh");
+    const {value,error}=joiProductSchema.validate(req.body)
+    if (error){
+        res.status(404).json({
+           error:error.details[0].message
+        })
+    }
+    const {title,description,category,price,image}=value;
+    await products.create({
+        title,
+        description,
+        category,
+        price,
+        image
+
+    })
+    res.status(201).json({
+        status:"success",
+        message:"product created successfully",
+        data:products
+    })
+},
 
 
 
+//View all products
+
+allproducts:async(req,res)=>{
+const productsList= await products.find();
+if(!productsList){
+    res.status(404).json({
+        status:"error",
+        message:"Products not found"
+    })
+}
+res.status(200).json({
+    status:"success",
+    message:"All product details fetched successfully",
+    data:productsList
+})
+
+},
 
 
+//View product By Id
 
+
+productById:async(req,res)=>{
+const productid=req.params.id
+const product=await products.findById(productid)
+    if(!product){
+        res.status(404).json({
+            status:"error",
+            message:"Product Not Found"
+        })
+    }
+    res.status(200).json({
+        status:"success",
+        message:"product details fetched successfully",
+        data:product
+    })
+
+},
+
+
+//Delete product
+
+// deleteProduct:async(req,res)=>{
+//     const {productId}=req.body
+
+
+//     if(!productId || )
+// }
 
 
 

@@ -57,6 +57,8 @@ const user =await userdatabase.findOne({
     email:email
 })
 
+
+
 // console.log(user)
 
 const id=user.id
@@ -91,6 +93,10 @@ res.status(200).json({
     data:{id,email,Token}
 })
 },
+
+
+
+
 
 
 

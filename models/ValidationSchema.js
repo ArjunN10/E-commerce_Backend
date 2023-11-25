@@ -7,16 +7,19 @@ const joiUserSchema = joi.object({
     password: joi.string().required(),
 });
 
-// const joiProductSchema = Joi.object({
-//     id:Joi.string(),
-//     title: Joi.string().required(),
-//     description:Joi.string(),
-//     price: Joi.number().positive(),
-//     image: Joi.string(),
-//     category:Joi.string(),
-// });
+
+const joiProductSchema=joi.object({
+    id: joi.string(),
+    title: joi.string().required(),
+    image: joi.string(),
+    price: joi.number().positive(),
+    category: joi.string(),
+    description: joi.string(),
+});
+
+
 
 module.exports = {
     joiUserSchema, 
-    // joiProductSchema
+    joiProductSchema
 };
