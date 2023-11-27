@@ -182,29 +182,29 @@ addtocart:async(req,res)=>{
 
 //view product from cart
 
-ViewCart:async(req,res)=>{
-    const UserId=req.params.id
-    const user=await userdatabase.findById(UserId)
-    // console.log(user) 
-    if(!user){
-        res.status(404).json({
-            status:"error",
-            message:"User Not Found"
-        })
-    } 
-    const cartProductId=user.cart
-    if (cartProductId.length === 0) {
-        return res
-          .status(200)
-          .json({ status: "Succes", message: "User Cart is Emty", data: [] });
-      }
-      const cartProducts=await Products.find({_id:{$in:cartProductId}})
-  res.status(200).json({
-    status:"success",
-    message:"cart Product Fetched Successfully",
-    data: cartProducts
-  })
-},
+// ViewCart:async(req,res)=>{
+//     const UserId=req.params.id
+//     const user=await userdatabase.findById(UserId)
+//     // console.log(user) 
+//     if(!user){
+//         res.status(404).json({
+//             status:"error",
+//             message:"User Not Found"
+//         })
+//     } 
+//     const cartProductId=user.cart
+//     if (cartProductId.length === 0) {
+//         return res
+//           .status(200)
+//           .json({ status: "Succes", message: "User Cart is Emty", data: [] });
+//       }
+//       const cartProducts=await Products.find({_id:{$in:cartProductId}})
+//   res.status(200).json({
+//     status:"success",
+//     message:"cart Product Fetched Successfully",
+//     data: cartProducts
+//   })
+// },
 
 
 
