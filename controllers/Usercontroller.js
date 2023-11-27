@@ -243,30 +243,30 @@ if (findprdts) {
 
 //show wishlist
 
-ViewWishlist:async(req,res)=>{
-    const userId=req.params.id
-    const user=await userdatabase.findById(userId)
-    if(!user){
-        res.status(404).json({
-            status:"error",
-            message:"User Not Defined"
-        })
-    }
-    const WishListPrdtId=user.wishlist
-    // console.log("WishListPrdtId:",WishListPrdtId)
-    if(WishListPrdtId.length === 0){
-        return res.status(200).json({ 
-            status: "Succes", 
-            message: "User Wishlist is Emty", 
-            data: [] });
-    }
-    const WishListproducts=await Products.find({_id:{$in:WishListPrdtId}})
-    res.status(200).json({
-      status: "Success",
-      message: "Wishlist products fetched successfully",
-      data: WishListproducts
-})
-},
+// ViewWishlist:async(req,res)=>{
+//     const userId=req.params.id
+//     const user=await userdatabase.findById(userId)
+//     if(!user){
+//         res.status(404).json({
+//             status:"error",
+//             message:"User Not Defined"
+//         })
+//     }
+//     const WishListPrdtId=user.wishlist
+//     // console.log("WishListPrdtId:",WishListPrdtId)
+//     if(WishListPrdtId.length === 0){
+//         return res.status(200).json({ 
+//             status: "Succes", 
+//             message: "User Wishlist is Emty", 
+//             data: [] });
+//     }
+//     const WishListproducts=await Products.find({_id:{$in:WishListPrdtId}})
+//     res.status(200).json({
+//       status: "Success",
+//       message: "Wishlist products fetched successfully",
+//       data: WishListproducts
+// })
+// },
 
 
 
