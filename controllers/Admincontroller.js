@@ -149,12 +149,69 @@ const product=await products.findById(productid)
 
 //Delete product
 
-// deleteProduct:async(req,res)=>{
-//     const {productId}=req.body
+deleteProduct:async(req,res)=>{
+    const {productId}=req.body
 
 
-//     if(!productId || )
-// }
+    if(!productId || !mongoose.Types.ObjectId.isValid(productId)){
+        return res.status(404).json({
+            status:"error",
+            message:"Invalid product Id provided"
+        })
+    }
+    const productdeleted=await products.findOneAndDelete({_id:productId})
+    if(!productdeleted){
+        return res.status(404).json({
+            status:"error",
+            message:"Product Not Found in Database"
+        })
+    }
+    return res.status(200).json({
+        status:"success",
+        message:"product deleted successfully"
+    })
+},
+
+
+//Update product
+
+UpdateProduct:async(req,res)=>{
+const {value,error}= joiProductSchema.validate(req.body)
+
+if(error){
+    return res.status(404).json({
+        status:"error",
+        message:error.details[0].message
+    })
+}
+const {id,title,image,price,category,description}=value;
+
+const product=await products.find()
+if(!product){
+
+    return res.status(404).json({
+        status:"error",
+        message:"Product not found in database"
+    })
+}
+await products.findByIdAndUpdate(
+    {_id:id},
+    {
+        title,
+        image,
+        price,
+        category,
+        description
+    }
+)
+res.status(200).json({
+    status:"success",
+    message:"Product successfully Updated"
+})
+},
+
+
+
 
 
 

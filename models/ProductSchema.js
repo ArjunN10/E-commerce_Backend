@@ -6,6 +6,7 @@ image:String,
 price:Number,
 category:String,
 description:String,
+ 
 
 
 })

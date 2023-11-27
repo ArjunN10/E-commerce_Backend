@@ -4,8 +4,11 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
     name: String,
     email: String,
-    username: String,
+    username: String,  
     password: String,
+    cart: [{type:mongoose.Schema.ObjectId, ref:"product"}],
+    wishlist:[{type:mongoose.Schema.ObjectId,ref:"product"}]
+ 
 });
 
 userSchema.pre("save", async function (next) {
@@ -17,4 +20,4 @@ userSchema.pre("save", async function (next) {
     next();
 });
 
-module.exports = mongoose.model("user", userSchema);  // export the Mongoose model
+module.exports = mongoose.model("user", userSchema);  

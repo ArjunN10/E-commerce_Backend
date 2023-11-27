@@ -46,9 +46,9 @@ const imageUpload = (req, res, next) => {
 
             // delet local file
 
-            fs.unlink(req.file.path, (unliker) => {
-                if (unliker){
-                    console.log("Error deleting local file", unliker);
+            fs.unlink(req.file.path, (unlinker) => {
+                if (unlinker){
+                    console.log("Error deleting local file", unlinker);
                 }
             })
 

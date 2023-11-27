@@ -26,8 +26,8 @@ router
 .post("/product",imageUpload,TrycatchMiddleware(admincontroller.addproduct))
 .get("/products",TrycatchMiddleware(admincontroller.allproducts))
 .get("/product/:id",TrycatchMiddleware(admincontroller.productById))
-
-
+.delete("/products",TrycatchMiddleware(admincontroller.deleteProduct))
+.put("/products",TrycatchMiddleware(admincontroller.UpdateProduct))
 
 
 

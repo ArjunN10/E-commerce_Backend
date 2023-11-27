@@ -14,7 +14,8 @@ mongoose.connect("mongodb://localhost:27017/E-commerce_FullStack", {
 });
 
 // Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
+
+// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.json());
 
