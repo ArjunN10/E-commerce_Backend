@@ -211,35 +211,35 @@ ViewCart:async(req,res)=>{
 //Add product to wishlist
 
 
-// AddToWishlist:async(req,res)=>{
-//     const userId=req.params.id
-//     // console.log(userId) 
-//     if(!userId){
-//         res.status(404).json({
-//             status:"error",
-//             message:"User Not Found"
+AddToWishlist:async(req,res)=>{
+    const userId=req.params.id
+    // console.log(userId) 
+    if(!userId){
+        res.status(404).json({
+            status:"error",
+            message:"User Not Found"
 
-//         })
-// }
-// const {productId}=req.body
-// const prdts=await Products.findById(productId)
-// if(!prdts){
-//     return res.status(404).json({ 
-//     status: "Failure", 
-//     message: "Product not found" });
-// }
-// const findprdts=await userdatabase.findOne({_id:userId, wishlist:productId})
-// if (findprdts) {
-//     return res.status(409).json({ 
-//         message: "Product already on your wishlist " 
-//     });
-//   }
-//   await userdatabase.updateOne({_id:userId},{$push:{wishlist:prdts}})
-//   res.status(201).json({
-//     status: "Success",
-//     message: "Product Succesfuly added to wishList",
-//   })
-// },
+        })
+}
+const {productId}=req.body
+const prdts=await Products.findById(productId)
+if(!prdts){
+    return res.status(404).json({ 
+    status: "Failure", 
+    message: "Product not found" });
+}
+const findprdts=await userdatabase.findOne({_id:userId, wishlist:productId})
+if (findprdts) {
+    return res.status(409).json({ 
+        message: "Product already on your wishlist " 
+    });
+  }
+  await userdatabase.updateOne({_id:userId},{$push:{wishlist:prdts}})
+  res.status(201).json({
+    status: "Success",
+    message: "Product Succesfuly added to wishList",
+  })
+},
 
 //show wishlist
 
