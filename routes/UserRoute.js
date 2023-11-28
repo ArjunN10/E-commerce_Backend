@@ -19,6 +19,7 @@ router
 .get("/:id/cart",TryCatchMiddleware(usercontroller.ViewCart))
 .post("/:id/wishlists",TryCatchMiddleware(usercontroller.AddToWishlist))
 .get("/:id/wishlists",TryCatchMiddleware(usercontroller.ViewWishlist))
+.delete("/:id/wishlists",TryCatchMiddleware(usercontroller.deletewishlist)) 
 
 
 

@@ -12,16 +12,20 @@ mongoose.connect("mongodb://localhost:27017/E-commerce_FullStack", {
   useUnifiedTopology: true,
 });
 
-// Middleware
 
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Routes
+
+
+
 app.use("/api/admin",adminrout);
 app.use("/api/users", usersrout);
 
-// Additional application logic goes here...
+
+
 
 app.listen(port, (err) => {
   if (err) {

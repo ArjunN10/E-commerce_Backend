@@ -270,6 +270,31 @@ ViewWishlist:async(req,res)=>{
 },
 
 
+//delete wishlist
+
+deletewishlist:async(req,res)=>{
+    const userId=req.params.id
+    console.log(userId)
+    const {productId}=req.body
+    if (!productId) {
+        return res.status(404).json({ 
+            message: "Product not Fount" 
+        });
+      } 
+      const user=await userdatabase.findById(userId)
+      if (!user) {
+        return res.status(404).json({ 
+            status: "Failear", message: "User Not Found"
+         });
+      }
+      await userdatabase.updateOne({_id:userId},{$pull:{wishlist:productId}})
+      res.status(200).json({
+        status:"success",
+        message:"successfully removed from wishlist"
+    })
+},
+
+
 
 
 
