@@ -294,7 +294,30 @@ deletewishlist:async(req,res)=>{
     })
 },
 
+//Payment process
 
+payment:async(req,res)=>{
+    const userId=req.params.id
+
+    const user=await userdatabase.findOne({_id:userId}).populate(cart.productId)
+
+    if(!user){
+        return res.status(404).json({
+            status:"error",
+            message:"User Not Found"
+        })
+    }
+    const cartProducts=user.cart
+    if(cartProducts.length === 0){
+        res.status(200).json({
+            status:"success",
+            message:"User cart is empty",
+            data:[]
+
+        })
+    }
+
+}
 
 
 

@@ -20,6 +20,7 @@ router
 .post("/:id/wishlists",TryCatchMiddleware(usercontroller.AddToWishlist))
 .get("/:id/wishlists",TryCatchMiddleware(usercontroller.ViewWishlist))
 .delete("/:id/wishlists",TryCatchMiddleware(usercontroller.deletewishlist)) 
+.post("//:id/payment",TryCatchMiddleware(usercontroller.payment))
 
 
 
