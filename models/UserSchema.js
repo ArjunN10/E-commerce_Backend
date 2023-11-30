@@ -4,12 +4,18 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
     name: String,
     email: String,
-    username: String,  
+    username: String,
     password: String,
-    cart: [{type:mongoose.Schema.ObjectId, ref:"product"}],
-    wishlist:[{type:mongoose.Schema.ObjectId,ref:"product"}]
- 
-});
+    cart: [
+      {
+        productsId: { type: mongoose.Schema.ObjectId, ref: "product" },
+        quantity: { type: Number, default: 1 },
+      },
+    ],
+    wishlist: [{ type: mongoose.Schema.ObjectId, ref: "product" }],
+    orders: [{ type: mongoose.Schema.ObjectId, ref: "orders" }],
+  });
+  
 
 userSchema.pre("save", async function (next) { 
     const user = this;

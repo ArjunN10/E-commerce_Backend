@@ -3,6 +3,7 @@ const userdatabase=require("../models/UserSchema")
 const { joiUserSchema}=require("../models/ValidationSchema")
 const bcrypt=require("bcrypt")
 const Products=require("../models/ProductSchema")
+const { default: Stripe } = require("stripe")
 
 
 
@@ -299,7 +300,7 @@ deletewishlist:async(req,res)=>{
 payment:async(req,res)=>{
     const userId=req.params.id
 
-    const user=await userdatabase.findOne({_id:userId}).populate(cart.productId)
+    const user=await userdatabase.findOne({_id:userId}).populate("cart.productsId")
 
     if(!user){
         return res.status(404).json({
@@ -316,6 +317,118 @@ payment:async(req,res)=>{
 
         })
     }
+    const lineItem = cartProducts.map((item) => {
+        return {
+          price_data: {
+            currency: "INR",
+            product_data: {
+              images: [item.productsId.productImage], 
+              name: item.productsId.title,
+            },
+            unit_amount: Math.round(item.productsId.price * 100),
+          },
+          quantity: item.quantity,
+        };
+      });
+      
+    session = await Stripe.Checkout.session.create({
+        payment_method_types: ["card"],
+        line_items: lineItem,
+        mode: "payment",
+        success_url: `http://localhost:3000/payment/success`, //uses code for success 
+        cancel_url: "http://localhost:3000/payment/Cancel",    //uses code for cancel 
+      });
+
+      
+      if (!session) {
+        return res.status(404).json({
+          status: "Failure",
+          message: " Error occured on  Session side",
+        });
+      }
+      sValue = {
+        userId,
+        user,
+        session,
+      };
+      // console.log(sValue)
+  
+      res.status(200).json({
+        status: "Success",
+        message: "Strip payment session created",
+        url: session.url,
+      });
+    },
+  
+
+
+//success (patment occured) 
+
+success:async(req,res)=>{
+
+    const {id,user,session}=sValue
+    const userid= user._id
+    const cartitem=user.cart
+    const productIds=cartitem.map((item)=>{item.productsId})
+    const orders=await order.create({
+        userid:id,
+        products:productIds,
+        order_Id:session.id,
+        payment_Id:`demo ${Date.now()}`,
+        total_amount:session.amount_total / 100,
+        
+    })
+
+        if (!orders) {
+            return res.json({
+                 message: "error occured while inputing to orderDB" 
+                });
+          }
+      
+          const orderId = orders._id;
+        //   console.log("orderid", orderId)
+      
+          const userUpdate = await userdatabase.updateOne(
+            { _id: userid },
+            {
+              $push: { orders: orderId },
+              $set: { cart: [] },
+            },
+            { new: true }
+          );
+      
+          // console.log(userUpdate);
+      
+          // console.log ("uSer Update",userUpdate)
+      
+          if (userUpdate.nModified === 1) {
+            res.status(200).json({
+              status: "Success",
+              message: "Payment Successful.",
+            });
+          } else {
+            res.status(500).json({
+              status: "Error",
+              message: "Failed to update user data.",
+            });
+          }
+        },
+
+
+        //Payment Cancel
+
+        Cancel:async(req,res)=>{
+            res.status(204).json({
+                status:" No Content",
+                message:"Payment canceled"
+            })
+        },
+        
+
+
+
+
+
 
 }
 
@@ -325,4 +438,11 @@ payment:async(req,res)=>{
 
 
 
-}
+
+
+
+
+
+
+
+
