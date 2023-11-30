@@ -320,7 +320,7 @@ payment:async(req,res)=>{
     const lineItem = cartProducts.map((item) => {
         return {
           price_data: {
-            currency: "INR",
+            currency: "inr",
             product_data: {
               images: [item.productsId.productImage], 
               name: item.productsId.title,
@@ -330,13 +330,14 @@ payment:async(req,res)=>{
           quantity: item.quantity,
         };
       });
-      
+
+    const SERVER_DOMAIN="http://localhost:3000/payment"  //domain for user
     session = await Stripe.Checkout.session.create({
         payment_method_types: ["card"],
         line_items: lineItem,
         mode: "payment",
-        success_url: `http://localhost:3000/payment/success`, //uses code for success 
-        cancel_url: "http://localhost:3000/payment/Cancel",    //uses code for cancel 
+        success_url: `${SERVER_DOMAIN}/success`, //domain user/ success code
+        cancel_url: `${SERVER_DOMAIN}/Cancel`,    //domain user/  cancel code
       });
 
       
