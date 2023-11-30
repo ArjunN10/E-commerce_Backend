@@ -4,8 +4,10 @@ const { joiUserSchema}=require("../models/ValidationSchema")
 const bcrypt=require("bcrypt")
 const Products=require("../models/ProductSchema")
 const { default: Stripe } = require("stripe")
+const mongoose=require("mongoose")
 
-
+const stripe=require("stripe")(process.env.STRIPE_SECRET_KEY)
+let sValue=[]
 
 module.exports={
 
@@ -181,6 +183,38 @@ addtocart:async(req,res)=>{
     })
 },
 
+
+
+//add cart quantity
+
+// updateCartItemQuantity: async (req, res) => {
+//     console.log(req.body)
+//     const userID = req.params.id; 
+//     const { id, quantityChange } = req.body;
+  
+//     const user = await User.findById(userID);
+//     if (!user) { return res.status(404).json({ message: 'User not found' }) }
+  
+//     const cartItem = user.cart.id(id);
+//     if (!cartItem) { return res.status(404).json({ message: 'Cart item not found' }) }
+  
+//     cartItem.quantity += quantityChange;
+  
+//     if (cartItem.quantity > 0) {
+//       await user.save();
+//     }
+  
+//     res.status(200).json({
+//       status: 'success',
+//       message: 'Cart item quantity updated',
+//       data: user.cart
+//     });
+//   },
+  
+
+
+
+
 //view product from cart
 
 ViewCart:async(req,res)=>{
@@ -299,7 +333,7 @@ deletewishlist:async(req,res)=>{
 
 payment:async(req,res)=>{
     const userId=req.params.id
-
+console.log("userid:",userId)
     const user=await userdatabase.findOne({_id:userId}).populate("cart.productsId")
 
     if(!user){
@@ -309,6 +343,8 @@ payment:async(req,res)=>{
         })
     }
     const cartProducts=user.cart
+    console.log("cartproduct :",cartProducts)
+
     if(cartProducts.length === 0){
         res.status(200).json({
             status:"success",
@@ -317,24 +353,27 @@ payment:async(req,res)=>{
 
         })
     }
-    const lineItem = cartProducts.map((item) => {
+    const cartItem = cartProducts.map((item) => {
         return {
           price_data: {
-            currency: "inr",
-            product_data: {
-              images: [item.productsId.productImage], 
-              name: item.productsId.title,
-            },
-            unit_amount: Math.round(item.productsId.price * 100),
-          },
-          quantity: item.quantity,
-        };
-      });
+                    currency: "inr",
+                    product_data: {
+                                productsId: { type: mongoose.Schema.ObjectId, ref: "product" },
+                                // images:[item.productsId.image], 
+                                    name: item.productsId.title,
+                                    },
+                                    unit_amount: Math.round(item.productsId.price * 100),
+                                }, 
+                                    quantity: item.quantity,
+                            };
+                        });
 
+                console.log(item.productsId.image)
+                            console.log(cartItem)
     const SERVER_DOMAIN="http://localhost:3000/payment"  //domain for user
-    session = await Stripe.Checkout.session.create({
+    session = await stripe.Checkout.session.create({
         payment_method_types: ["card"],
-        line_items: lineItem,
+        line_items: cartItem,
         mode: "payment",
         success_url: `${SERVER_DOMAIN}/success`, //domain user/ success code
         cancel_url: `${SERVER_DOMAIN}/Cancel`,    //domain user/  cancel code
