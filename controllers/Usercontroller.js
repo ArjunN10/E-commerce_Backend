@@ -197,7 +197,6 @@ res.status(200).json({
             });
         }
 
-
         
        
         const productObject = {
