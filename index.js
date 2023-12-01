@@ -7,11 +7,18 @@ const usersrout = require("./routes/UserRoute")
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost:27017/E-commerce_FullStack", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// mongoose.connect("mongodb://localhost:27017/E-commerce_FullStack", {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
+const mongoDB = "mongodb://localhost:27017/E-commerce_FullStack";
 
+// Wait for database to connect, logging an error if there is a problem
+main().catch((err) => console.log(err))
+async function main() {
+  await mongoose.connect(mongoDB);
+  console.log("db connected");
+}
 
 
 // Middleware

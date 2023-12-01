@@ -15,14 +15,14 @@ router
 .get("/products",TrycatchMiddleware(usercontroller.ViewProduct))
 .get("/products/:id",TrycatchMiddleware(usercontroller.productById))
 .get("/products/category/:categoryname",TryCatchMiddleware(usercontroller.productBycategory))
-.post("/:id/cart",TryCatchMiddleware(usercontroller.addtocart))
+.post("/:id/cart",TryCatchMiddleware(usercontroller.addToCart))
 .get("/:id/cart",TryCatchMiddleware(usercontroller.ViewCart))
 .post("/:id/wishlists",TryCatchMiddleware(usercontroller.AddToWishlist))
 .get("/:id/wishlists",TryCatchMiddleware(usercontroller.ViewWishlist))
 .delete("/:id/wishlists",TryCatchMiddleware(usercontroller.deletewishlist)) 
 .post("/:id/payment",TryCatchMiddleware(usercontroller.payment))
 .get("/payment/success",TryCatchMiddleware(usercontroller.success))
-.post("/payment/cancel",TryCatchMiddleware(usercontroller.Cancel))
+.post("/payment/cancel",TryCatchMiddleware(usercontroller.Cancel)) 
 
 
 
