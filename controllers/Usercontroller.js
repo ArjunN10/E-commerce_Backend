@@ -374,79 +374,10 @@ deletewishlist:async(req,res)=>{
         message:"successfully removed from wishlist"
     })
 },
- 
-//Payment process
 
-// payment:async(req,res)=>{
-//     const userId=req.params.id
-// console.log("userid:",userId)
-//     const user=await userdatabase.findOne({_id:userId}).populate("cart.productsId")
 
-//     if(!user){
-//         return res.status(404).json({
-//             status:"error",
-//             message:"User Not Found"
-//         })
-//     }
-//     const cartProducts=user.cart
-//     console.log("cartproduct :",cartProducts)
+//User payment 
 
-//     if(cartProducts.length === 0){
-//         res.status(200).json({
-//             status:"success",
-//             message:"User cart is empty",
-//             data:[]
-
-//         })
-//     }
-//     const cartItem = cartProducts.map((item) => {
-//         console.log("cartitems:",cartItem)
-//         return {
-//           price_data: {
-//                     currency: "inr",
-//                     product_data: {
-//                                 // productsId: { type: mongoose.Schema.ObjectId, ref: "product" },
-//                                     images:[item.productsId.image], 
-//                                     name: item.productsId.title,
-//                                     },
-//                                     unit_amount: Math.round(item.productsId.price * 100),
-//                                 }, 
-//                                     quantity: item.quantity,
-//                             };
-//                         });
- 
-//                 // console.log(item.productsId.image)
-//     const SERVER_DOMAIN="http://localhost:3000/payment"  //domain for user
-//     session = await stripe.Checkout.session.create({
-//         payment_method_types: ["card"],
-//         line_items: cartItem,
-//         mode: "payment",
-//         success_url: `${SERVER_DOMAIN}/success`, //domain user/ success code
-//         cancel_url: `${SERVER_DOMAIN}/Cancel`,    //domain user/  cancel code
-//       });
-
-      
-//       if (!session) {
-//         return res.status(404).json({
-//           status: "Failure",
-//           message: " Error occured on  Session side",
-//         });
-//       }
-//       sValue = {
-//         userId,
-//         user,
-//         session,
-//       };
-//       // console.log(sValue)
-  
-//       res.status(200).json({
-//         status: "Success",
-//         message: "Strip payment session created",
-//         url: session.url,
-//       });
-//     },
-  
-    
     payment: async (req, res) => {
         const userId = req.params.id;
         // uid = userId  //  for parsing globel vareable
@@ -515,57 +446,61 @@ deletewishlist:async(req,res)=>{
 
 
 
-//success (patment occured) 
+//success (payment occured) 
 
-success:async(req,res)=>{
+success:async (req, res) => {
+    const { id, user, session } = req.body; // Assuming you are sending data in the request body
 
-    const {id,user,session}=sValue
-    const userid= user._id
-    const cartitem=user.cart
-    const productIds=cartitem.map((item)=>{item.productsId})
-    const orders=await order.create({
-        userid:id,
-        products:productIds,
-        order_Id:session.id,
-        payment_Id:`demo ${Date.now()}`,
-        total_amount:session.amount_total / 100,
-        
-    })
+    const userId = user._id;
+    const cartItems = user.cart;
+    const productIds = cartItems.map((item) => item.productsId);
 
-        if (!orders) {
-            return res.json({
-                 message: "error occured while inputing to orderDB" 
-                });
-          }
-      
-          const orderId = orders._id;
-        //   console.log("orderid", orderId)
-      
-          const userUpdate = await userdatabase.updateOne(
-            { _id: userid },
+    try {
+        const order = await order.create({
+            userid: userId,
+            products: productIds,
+            order_Id: session.id,
+            payment_Id: `demo ${Date.now()}`,
+            total_amount: session.amount_total / 100,
+        })
+
+        if (!order) {
+            return res.status(500).json({
+                status: "Error",
+                message: "Failed to create order.",
+            })
+        }
+
+        const orderId = order._id;
+
+        const userUpdate = await UserSchema.updateOne(
+            { _id: userId },
             {
-              $push: { orders: orderId },
-              $set: { cart: [] },
+                $push: { orders: orderId },
+                $set: { cart: [] },
             },
-            { new: true }
-          );
-      
-          // console.log(userUpdate);
-      
-          // console.log ("uSer Update",userUpdate)
-      
-          if (userUpdate.nModified === 1) {
+        )
+
+        if (userUpdate.nModified === 1) {
             res.status(200).json({
-              status: "Success",
-              message: "Payment Successful.",
+                status: "Success",
+                message: "Payment Successful.",
             });
-          } else {
+        } else {
             res.status(500).json({
-              status: "Error",
-              message: "Failed to update user data.",
+                status: "Error",
+                message: "Failed to update user data.",
             });
-          }
-        },
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            status: "Error",
+            message: "Internal server error.",
+        })
+    }
+},
+
 
 
         //Payment Cancel
