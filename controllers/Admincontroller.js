@@ -212,7 +212,6 @@ res.status(200).json({
 },
 
 
-
 //order Details
 
 AdminOrderDtails:async(req,res)=>{
@@ -230,7 +229,6 @@ AdminOrderDtails:async(req,res)=>{
         order_Data:products 
     })
 },
-
 
 
 //Total Revenue Generated
@@ -264,7 +262,5 @@ status:async(req,res)=>{
              })
          }
     },
-
-
 }
 

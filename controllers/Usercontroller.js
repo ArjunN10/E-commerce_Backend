@@ -3,14 +3,14 @@ const userdatabase=require("../models/UserSchema")
 const { joiUserSchema}=require("../models/ValidationSchema")
 const bcrypt=require("bcrypt")
 const Products=require("../models/ProductSchema")
-const { default: Stripe } = require("stripe")
-const userschems=require("../models/UserSchema")
+// const { default: Stripe } = require("stripe")
+// const userschems=require("../models/UserSchema")
 const UserSchema = require("../models/UserSchema")
-const mongoose=require("mongoose")
+// const mongoose=require("mongoose")
 
 const { ObjectId } = require('mongoose').Types;
 const order=require("../models/OrderSchema")
-const OrderSchema = require("../models/OrderSchema")
+// const OrderSchema = require("../models/OrderSchema")
 
 const stripe=require("stripe")(process.env.STRIPE_SECRET_KEY)
 
@@ -172,7 +172,7 @@ res.status(200).json({
         console.log(typeof(userId))
     
         // Assuming you have a model named 'User' for your users
-        const user = await userschems.findById(userId);
+        const user = await UserSchema.findById(userId);
         
         // Check if the user exists
         if (!user) {
@@ -210,7 +210,7 @@ res.status(200).json({
         }
         try {
         // Assuming 'user' has a property 'cart' that is an array
-        await userschems.updateOne({ _id: user._id }, { $addToSet: { cart:productObject } });
+        await UserSchema.updateOne({ _id: user._id }, { $addToSet: { cart:productObject } });
     
         res.status(200).json({
             status: "success",
@@ -279,7 +279,7 @@ ViewCart:async(req,res)=>{
         });
     }
     //  console.log("if",UserId);
-const cartProducts = await userschems.findOne({ _id:UserId}).populate("cart.productsId")
+const cartProducts = await UserSchema.findOne({ _id:UserId}).populate("cart.productsId")
 
 console.log(cartProducts)
 
@@ -526,14 +526,14 @@ console.log("orders:",orders)
             });
         }
 
-        const orderedItems= await OrderSchema.find({_id:{$in:orderedProducts}}).populate("products")   
+        const orderedItems= await order.find({_id:{$in:orderedProducts}}).populate("products")   
         // console.log(orderedItems)
      res.status(200).json({
     message: 'Ordered Products Details Found',
     data: orderedItems,
 })
-},     
-      
+},
+             
         
 }
 
