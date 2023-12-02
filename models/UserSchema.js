@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
     email: String,
     username: String,
     password: String,
+    // cart: [{ type: mongoose.Schema.ObjectId, ref: "product" }],
     cart: [
       {
         productsId: { type: mongoose.Schema.ObjectId, ref: "product" },

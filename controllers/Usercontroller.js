@@ -5,6 +5,7 @@ const bcrypt=require("bcrypt")
 const Products=require("../models/ProductSchema")
 const { default: Stripe } = require("stripe")
 const userschems=require("../models/UserSchema")
+const UserSchema = require("../models/UserSchema")
 // const mongoose=require("mongoose")
 const { ObjectId } = require('mongoose').Types;
 
@@ -201,7 +202,7 @@ res.status(200).json({
        
         const productObject = {
             productsId: new  ObjectId(productId),
-            quantity: req.body.quantity, // or set the desired quantity
+            quantity: req.body.quantity, // or set the desired quantity       
         }
         try {
         // Assuming 'user' has a property 'cart' that is an array
@@ -256,25 +257,34 @@ res.status(200).json({
 ViewCart:async(req,res)=>{
     const UserId=req.params.id
     const user=await userdatabase.findById(UserId)
-    console.log(user) 
+    // console.log(user) 
     if(!user){
         res.status(404).json({
             status:"error",
             message:"User Not Found"
         })
     } 
-    const cartProductId=user.cart
+    const cartProductId = user.cart;
+    // console.log("cartProductId:", cartProductId);
+    
     if (cartProductId.length === 0) {
-        return res
-          .status(200)
-          .json({ status: "Succes", message: "User Cart is Empty", data: [] });
-      }
-      const cartProducts=await Products.find({_id:{$in:cartProductId}})
-  res.status(200).json({
-    status:"success",
-    message:"cart Product Fetched Successfully",
-    data: cartProducts
-  })
+        return res.status(200).json({
+            status: "Success",
+            message: "User Cart is Empty",
+            data: [],
+        });
+    }
+    //  console.log("if",UserId);
+const cartProducts = await userschems.findOne({ _id:UserId}).populate("cart.productsId")
+
+console.log(cartProducts)
+
+res.status(200).json({
+    status: "success",
+    message: "Cart Product Fetched Successfully",
+    data: cartProducts,
+});
+
 },
 
 
@@ -436,6 +446,73 @@ deletewishlist:async(req,res)=>{
 //       });
 //     },
   
+    
+    payment: async (req, res) => {
+        const userId = req.params.id;
+        // uid = userId  //  for parsing globel vareable
+        const user = await UserSchema.findOne({ _id: userId }).populate("cart.productsId")
+    
+        if (!user) {         
+          return res.status(404).json({ message: "User Not found" });  
+        }
+    
+        const cartProdcts = user.cart;  
+
+        console.log("cartitems",cartProdcts);
+
+
+        if (cartProdcts.length === 0) {
+          return res
+            .status(200)
+            .json({ status: "Succes", message: "User Cart is Emty", data: [] });
+        }
+    
+        const lineItems = cartProdcts.map((item) => {
+            console.log("Item Price:", item.productsId.price);
+          return {
+            price_data: {
+              currency: "inr",
+              product_data: {
+                        name: item.productsId.title,
+                        description: item.productsId.description,
+                            },
+                                unit_amount: Math.round(item.productsId.price * 100),
+                            },
+                        quantity: 1,
+                    };
+                });
+    console.log(lineItems)               
+
+        session = await stripe.checkout.sessions.create({
+          payment_method_types: ["card"],
+          line_items: lineItems,
+          mode: "payment",
+          success_url: `http://localhost:3000/api/users/payment/success`, // Replace with your success URL
+          cancel_url: "http://localhost:3000/api/users/payment/cancel", // Replace with your cancel URL
+        });
+    
+        // console.log("Stripe Session:", session);
+    
+        if (!session) {
+          return res.json({
+            status: "Failure",
+            message: " Error occured on  Session side",
+          });
+        }
+        sValue = {
+          userId,
+          user,
+          session,
+        };
+        // console.log(sValue)
+    
+        res.status(200).json({
+          status: "Success",
+          message: "Strip payment session created",
+          url: session.url,
+        });
+      },
+
 
 
 //success (patment occured) 
