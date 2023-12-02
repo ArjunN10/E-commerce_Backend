@@ -10,6 +10,7 @@ const mongoose=require("mongoose")
 
 const { ObjectId } = require('mongoose').Types;
 const order=require("../models/OrderSchema")
+const OrderSchema = require("../models/OrderSchema")
 
 const stripe=require("stripe")(process.env.STRIPE_SECRET_KEY)
 
@@ -508,6 +509,30 @@ console.log("orders:",orders)
             })
         },
 
+          //Order Details
+
+        OrederDetails:async(req,res)=>{
+        const userId=req.params.id
+        const user = await UserSchema.findOne({ _id: userId }).populate("orders")
+        // console.log("user",user)
+
+        const orderedProducts=user.orders
+        // console.log("orderPro:",orderedProducts)
+
+        if (orderedProducts.length === 0) {
+            return res.status(404).json({
+                message: "You don't have any product orders.",
+                data: [],
+            });
+        }
+
+        const orderedItems= await OrderSchema.find({_id:{$in:orderedProducts}}).populate("products")   
+        // console.log(orderedItems)
+     res.status(200).json({
+    message: 'Ordered Products Details Found',
+    data: orderedItems,
+})
+},     
       
         
 }

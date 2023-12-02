@@ -4,6 +4,7 @@ const jwt=require("jsonwebtoken")
 const userDatabase=require("../models/UserSchema")
 const {joiProductSchema}=require("../models/ValidationSchema")
 const products=require("../models/ProductSchema")
+const OrderSchema = require("../models/OrderSchema")
 
 
 
@@ -209,6 +210,26 @@ res.status(200).json({
     message:"Product successfully Updated"
 })
 },
+
+
+
+//order Details
+
+AdminOrderDtails:async(req,res)=>{
+
+    const products=await OrderSchema.find()
+    if(products.length === 0){
+        return res.status(404).json({
+            status:"error",
+            message:"No order Details"
+        })
+    }
+    res.status(200).json({
+        status:"success",
+        message:"Order Details Successfully Fetched",
+        order_Data:products 
+    })
+}
 
 
 

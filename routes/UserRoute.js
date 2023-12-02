@@ -23,6 +23,7 @@ router
 .post("/:id/payment",TryCatchMiddleware(usercontroller.payment))
 .get("/payment/success",TryCatchMiddleware(usercontroller.success))
 .post("/payment/cancel",TryCatchMiddleware(usercontroller.Cancel)) 
+.get("/:id/orders",TryCatchMiddleware(usercontroller.OrederDetails))
 
     
 
