@@ -9,11 +9,11 @@ const userSchema = new mongoose.Schema({
     // cart: [{ type: mongoose.Schema.ObjectId, ref: "product" }],
     cart: [
       {
-        productsId: { type: mongoose.Schema.ObjectId, ref: "product" },
+        productsId: { type: mongoose.Schema.ObjectId, ref: "products" },
         quantity: { type: Number, default: 1 },
       },
     ],
-    wishlist: [{ type: mongoose.Schema.ObjectId, ref: "product" }],
+    wishlist: [{ type: mongoose.Schema.ObjectId, ref: "products" }],
     orders: [{ type: mongoose.Schema.ObjectId, ref: "orders" }],
   });
   

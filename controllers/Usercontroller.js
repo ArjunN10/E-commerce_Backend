@@ -170,18 +170,13 @@ res.status(200).json({
         const userId = req.params.id;
 
         console.log(typeof(userId))
-    
-        // Assuming you have a model named 'User' for your users
         const user = await UserSchema.findById(userId);
-        
-        // Check if the user exists
         if (!user) {
         return res.status(404).json({
             status: "error",
             message: "User Not Found",
         });
         } 
-    
         const { productId } = req.body;
 
         // console.log(typeof(productId),"iggggg");
@@ -193,25 +188,18 @@ res.status(200).json({
             message: "Product Not Found",
         });
         }
-        
-        
         if (!ObjectId.isValid(productId)) {
             return res.status(400).json({
                 status: "error",
                 message: "Invalid Product ID",
             });
         }
-
-        
-       
         const productObject = {
             productsId: new  ObjectId(productId),
-            quantity: req.body.quantity, // or set the desired quantity       
+            quantity: req.body.quantity,      
         }
         try {
-        // Assuming 'user' has a property 'cart' that is an array
         await UserSchema.updateOne({ _id: user._id }, { $addToSet: { cart:productObject } });
-    
         res.status(200).json({
             status: "success",
             message: "Product Successfully Added To Cart",
@@ -278,11 +266,8 @@ ViewCart:async(req,res)=>{
             data: [],
         });
     }
-    //  console.log("if",UserId);
 const cartProducts = await UserSchema.findOne({ _id:UserId}).populate("cart.productsId")
-
-console.log(cartProducts)
-
+// console.log(cartProducts)
 res.status(200).json({
     status: "success",
     message: "Cart Product Fetched Successfully",
@@ -294,7 +279,6 @@ res.status(200).json({
 
 
 //Add product to wishlist
-
 
 AddToWishlist:async(req,res)=>{
     const userId=req.params.id

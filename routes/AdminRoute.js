@@ -25,7 +25,7 @@ router
 .get("/users/:id",TrycatchMiddleware(admincontroller.UseById))
 .post("/product",imageUpload,TrycatchMiddleware(admincontroller.addproduct))
 .get("/products",TrycatchMiddleware(admincontroller.allproducts))
-.get("/product/:id",TrycatchMiddleware(admincontroller.productById))
+.get("/products/:id",TrycatchMiddleware(admincontroller.productById))
 .delete("/products",TrycatchMiddleware(admincontroller.deleteProduct))
 .put("/products",TrycatchMiddleware(admincontroller.UpdateProduct))
 .get("/orders",TrycatchMiddleware(admincontroller.AdminOrderDtails))  
