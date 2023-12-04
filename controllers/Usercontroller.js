@@ -3,20 +3,16 @@ const userdatabase=require("../models/UserSchema")
 const { joiUserSchema}=require("../models/ValidationSchema")
 const bcrypt=require("bcrypt")
 const Products=require("../models/ProductSchema")
-// const { default: Stripe } = require("stripe")
-// const userschems=require("../models/UserSchema")
 const UserSchema = require("../models/UserSchema")
-// const mongoose=require("mongoose")
-
 const { ObjectId } = require('mongoose').Types;
 const order=require("../models/OrderSchema")
-// const OrderSchema = require("../models/OrderSchema")
-
 const stripe=require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 let sValue={}
 
 module.exports={
+
+
 
 //User Register
 
@@ -516,8 +512,7 @@ console.log("orders:",orders)
     message: 'Ordered Products Details Found',
     data: orderedItems,
 })
-},
-             
+},            
         
 }
 

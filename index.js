@@ -11,6 +11,7 @@ const mongoose = require("mongoose");
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
 // });
+
 const mongoDB = "mongodb://localhost:27017/E-commerce_FullStack";
 
 // Wait for database to connect, logging an error if there is a problem
